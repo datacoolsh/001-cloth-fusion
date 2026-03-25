@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloth Fusion — 虚拟试衣间</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────────────────── -->
+<header>
+  <div class="logo">CLOTH<span>FUSION</span></div>
+  <div class="badge">DEMO v0.1</div>
+</header>
+
+<!-- ── Step Indicator ──────────────────────────────────────────────────────── -->
+<div class="steps-bar">
+  <div class="step-item active" id="si-1">
+    <div class="step-dot">1</div>
+    <div class="step-label">上传照片</div>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-item" id="si-2">
+    <div class="step-dot">2</div>
+    <div class="step-label">AI 处理</div>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-item" id="si-3">
+    <div class="step-dot">3</div>
+    <div class="step-label">选择搭配</div>
+  </div>
+  <div class="step-connector"></div>
+  <div class="step-item" id="si-4">
+    <div class="step-dot">4</div>
+    <div class="step-label">试穿展示</div>
+  </div>
+</div>
+
+<!-- ── Main ────────────────────────────────────────────────────────────────── -->
+<main class="container">
+
+  <!-- ── Step 1: Upload ──────────────────────────────────────────────────── -->
+  <section class="step-panel active" id="panel-1">
+    <div class="panel-title">
+      <h2>上传您的照片</h2>
+      <p>请上传一张正面全身照，建议在光线充足的环境下拍摄</p>
+    </div>
+
+    <div class="upload-layout">
+      <!-- 上传区 -->
+      <div class="upload-zone" id="upload-zone">
+        <input type="file" id="photo-input" accept="image/*">
+        <div class="upload-preview" id="upload-preview">
+          <img id="preview-img" src="" alt="预览">
+          <div class="preview-badge">✓ 照片已选择</div>
+        </div>
+        <div class="upload-content">
+          <div class="upload-icon">📷</div>
+          <h3>拖拽或点击上传</h3>
+          <p>支持 JPG、PNG，最大 15MB</p>
+          <p style="margin-top:8px;font-size:12px;color:var(--muted);">建议：正面站立，背景简单</p>
+        </div>
+      </div>
+
+      <!-- 测量表单 -->
+      <div class="form-card">
+        <h3>身体数据</h3>
+
+        <div class="form-group">
+          <label>身高（cm）<span id="val-height">165</span> cm</label>
+          <input type="range" id="sl-height" min="145" max="195" step="1" value="165">
+        </div>
+        <div class="form-group">
+          <label>体重（kg）<span id="val-weight">55</span> kg</label>
+          <input type="range" id="sl-weight" min="38" max="120" step="1" value="55">
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <label style="font-size:13px;color:var(--muted);display:block;margin-bottom:10px;">体型预设（可选）</label>
+          <div class="preset-buttons">
+            <button class="preset-btn active" data-preset="标准">标准</button>
+            <button class="preset-btn" data-preset="偏瘦">偏瘦</button>
+            <button class="preset-btn" data-preset="微胖">微胖</button>
+            <button class="preset-btn" data-preset="运动">运动型</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>胸围<span id="val-bust">88</span> cm</label>
+          <input type="range" id="sl-bust" min="72" max="110" step="1" value="88">
+        </div>
+        <div class="form-group">
+          <label>腰围<span id="val-waist">68</span> cm</label>
+          <input type="range" id="sl-waist" min="56" max="96" step="1" value="68">
+        </div>
+        <div class="form-group">
+          <label>臀围<span id="val-hip">92</span> cm</label>
+          <input type="range" id="sl-hip" min="78" max="115" step="1" value="92">
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <div></div>
+      <button class="btn btn-primary" id="btn-step1-next" disabled style="width:220px;">
+        开始 AI 处理 →
+      </button>
+    </div>
+  </section>
+
+  <!-- ── Step 2: Processing ───────────────────────────────────────────────── -->
+  <section class="step-panel" id="panel-2">
+    <div class="panel-title">
+      <h2>AI 正在处理中</h2>
+      <p>正在分析您的照片并生成虚拟形象，请稍候…</p>
+    </div>
+
+    <div class="processing-center">
+      <div class="spinner-ring"></div>
+      <p style="color:var(--muted);font-size:14px;">使用 rembg（U²-Net）模型处理</p>
+
+      <div class="processing-steps">
+        <div class="proc-step" id="ps-0">
+          <span class="proc-step-icon">🖼️</span>
+          <span class="proc-step-text">读取并压缩图片</span>
+        </div>
+        <div class="proc-step" id="ps-1">
+          <span class="proc-step-icon">🤖</span>
+          <span class="proc-step-text">AI 识别人体轮廓</span>
+        </div>
+        <div class="proc-step" id="ps-2">
+          <span class="proc-step-icon">✂️</span>
+          <span class="proc-step-text">精确去除背景</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Step 3: Select Clothes ───────────────────────────────────────────── -->
+  <section class="step-panel" id="panel-3">
+    <div class="panel-title">
+      <h2>选择今日搭配</h2>
+      <p>选择上装或下装（至少一件），AI 将为您生成试穿效果</p>
+    </div>
+
+    <div class="clothes-layout">
+      <div class="clothes-section">
+        <h3>上装 TOP</h3>
+        <div class="clothes-grid" id="grid-top"></div>
+      </div>
+      <div class="clothes-section">
+        <h3>下装 BOTTOM</h3>
+        <div class="clothes-grid" id="grid-bottom"></div>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="btn btn-ghost" id="btn-step3-back">← 返回</button>
+      <button class="btn btn-primary" id="btn-step3-next" disabled style="width:220px;">
+        确认试穿 →
+      </button>
+    </div>
+  </section>
+
+  <!-- ── Step 4: Try-On Result ─────────────────────────────────────────────── -->
+  <section class="step-panel" id="panel-4">
+    <div class="panel-title">
+      <h2>AI 试穿效果</h2>
+      <p>点击下方按钮，IDM-VTON 将为您生成照片级真实试穿效果</p>
+    </div>
+
+    <div class="tryon-layout">
+
+      <!-- 图片展示区（人物照 / AI 结果） -->
+      <div class="tryon-stage">
+        <div class="stage-header">
+          <span class="stage-title" id="stage-title">人物照片</span>
+          <span class="ai-badge" id="stage-ai-badge" style="display:none;">AI RESULT</span>
+        </div>
+        <div class="tryon-display-wrap" id="tryon-display-wrap">
+          <!-- 默认显示去背景后的人物照 -->
+          <img id="tryon-person-img" class="tryon-display-img" src="" alt="人物">
+          <!-- AI 生成结果（覆盖层） -->
+          <img id="tryon-result-img" class="tryon-display-img tryon-result-hidden"
+               src="" alt="AI 试穿效果">
+          <!-- 加载中遮罩 -->
+          <div class="tryon-loading-overlay" id="tryon-loading-overlay" style="display:none;">
+            <div class="spinner-ring"></div>
+            <p id="tryon-loading-text">AI 正在处理中，约需 60–90 秒…</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧：搭配信息 + 操作 -->
+      <div class="result-panel">
+
+        <div class="outfit-summary">
+          <h3>本次搭配</h3>
+          <div id="outfit-items"></div>
+        </div>
+
+        <!-- 主操作：AI 试穿 -->
+        <div class="ai-action-card">
+          <div class="ai-action-header">
+            <span class="ai-badge">AI POWERED</span>
+            <span style="font-size:12px;color:var(--muted);">IDM-VTON · Replicate</span>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin:10px 0 14px;line-height:1.6;">
+            使用扩散模型将选中服装真实穿着在您的照片上，生成照片级试穿图。
+          </p>
+          <button class="btn btn-primary" id="btn-ai-tryon">
+            生成 AI 试穿效果
+          </button>
+          <div id="ai-error-msg" style="display:none;margin-top:10px;font-size:12px;color:#f87171;"></div>
+        </div>
+
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+          <h3 style="font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;">
+            体型参数
+          </h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" id="measurements-display"></div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-secondary" onclick="document.getElementById('btn-step4-back').click()">
+            重新选择搭配
+          </button>
+          <button class="btn btn-ghost" id="btn-restart">重新开始</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="btn btn-ghost" id="btn-step4-back">← 返回搭配</button>
+      <div></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script src="/static/js/app.js"></script>
+<script>
+  // 渲染测量数据展示
+  document.addEventListener('DOMContentLoaded', () => {
+    const origGoToStep = goToStep;
+    const wrap = document.getElementById('measurements-display');
+    // 在进入第4步时渲染测量值
+    const observer = new MutationObserver(() => {
+      if (document.getElementById('panel-4').classList.contains('active') && wrap) {
+        const m = state.measurements;
+        wrap.innerHTML = [
+          ['身高', m.height + ' cm'],
+          ['体重', m.weight + ' kg'],
+          ['胸围', m.bust  + ' cm'],
+          ['腰围', m.waist + ' cm'],
+          ['臀围', m.hip   + ' cm'],
+        ].map(([k, v]) => `
+          <div style="background:var(--surface);padding:10px 14px;border-radius:8px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">${k}</div>
+            <div style="font-size:16px;font-weight:600;color:var(--gold);">${v}</div>
+          </div>
+        `).join('');
+      }
+    });
+    observer.observe(document.getElementById('panel-4'), { attributes: true, attributeFilter: ['class'] });
+  });
+</script>
+</body>
+</html>
